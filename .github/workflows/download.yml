@@ -1,0 +1,35 @@
+
+name: download catalog & push to rep
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Run action every 4 hour at 05 min
+  schedule:
+  - cron: "5 */4 * * *"
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    env:
+      CATALOG_FILE: catalog.zip
+      CATALOG_HTTP: https://flibusta.site/catalog/catalog.zip
+      # https://flibusta.is/catalog/catalog.zip
+      
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: data
+
+    steps:
+    - name: test
+      run: |
+        git checkout
+        ls -la
+    
+    - name: download & unzip
+      run: |
+        curl -O http://flibusta.is/catalog/catalog.zip -H "User-Agent: FCI/curl (flibusta catalog indexer; dev version)"
+        unzip catalog.zip   
