@@ -24,9 +24,9 @@ jobs:
         # working-directory: data
 
     steps:
-    - name: test
+    - name: git clone 
       run: |
-        git checkout
+        git clone --progress --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://github.com/${GITHUB_REPOSITORY}.git" .
         ls -la
     
     - name: download & unzip
