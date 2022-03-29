@@ -21,12 +21,12 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: data
+        # working-directory: data
 
     steps:
     - name: test
       run: |
-        git checkout
+        git clone .
         ls -la
     
     - name: download & unzip
