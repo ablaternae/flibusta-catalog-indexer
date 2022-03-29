@@ -54,7 +54,7 @@ jobs:
       run: |
         ls -la
         ls -la ./data
-        [ -f "data/.updated" ] && git add -A || (echo "Not that much different from the previous" && exit 0)
+        [ -f "./data/.updated" ] && git add -A -f ./data || (echo "Not that much different from the previous" && exit 0)
         git status
         git commit -m "$COMMIT_MESSAGE"
         git push
