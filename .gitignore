@@ -1,5 +1,5 @@
 
-/data
+/data/
 
 ### CudaText ###
 # Project files should be checked into the repository, unless a significant
@@ -10,7 +10,8 @@
 # Created by git for backups. To disable backups in Git:
 # $ git config --global mergetool.keepBackup false
 *.orig
-*.github_[token|secret][s?]
+*.github_token
+*.github_secrets
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/git,linux,pydev,macos,backup,eclipse,windows,netbeans,textmate,pycharm+all,sublimetext,visualstudiocode,dotenv
