@@ -42,20 +42,11 @@ jobs:
         tempname=$(mktemp)
         curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
         cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
-        git status
-        git add -A
-        git status
-        [ -f ".updated" ] && echo A || echo NO
-        #[ -f ".updated" ] && git add -A || (echo "Not that much different from the previous" && exit 0)
-        #git commit -m "$COMMIT_MESSAGE"
-        #git push
 
     - name: git push
       run: |
-        ls -la
-        ls -la ./data
         [ -f "./data/.updated" ] && git add -A -f ./data || (echo "Not that much different from the previous" && exit 0)
         git status
         git commit -m "$COMMIT_MESSAGE"
-        git push
+        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
         
