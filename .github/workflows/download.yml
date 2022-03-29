@@ -25,16 +25,16 @@ jobs:
         # working-directory: data
 
     steps:
-    - name: set git config
-      run: |
-          git config user.email "ablaternae@users.noreply.github.com"
-          git config user.name "d;)"
-          
     - name: git clone 
       run: |
         git clone --progress --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
         ls -la
     
+    - name: git config username
+      run: |
+          git config user.email "ablaternae@users.noreply.github.com"
+          git config user.name "d;)"
+          
     - name: download & unzip
       run: |
         tempname=$(mktemp)
