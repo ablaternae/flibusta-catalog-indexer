@@ -15,6 +15,7 @@ jobs:
     env:
       CATALOG_FILE: catalog.zip
       CATALOG_HTTP: https://flibusta.site/catalog/catalog.zip
+      USER_AGENT: "User-Agent: FCI/curl (https://github.com/ablaternae/flibusta-catalog-indexer)"
       # https://flibusta.is/catalog/catalog.zip
       COMMIT_MESSAGE: "Update on $(date +'%Y-%m-%d %H:%M')"
       
@@ -32,13 +33,13 @@ jobs:
     
     - name: git config username
       run: |
-          git config user.email "ablaternae@users.noreply.github.com"
           git config user.name "d;)"
+          git config user.email "ablaternae@users.noreply.github.com"
           
     - name: download & unzip
       run: |
         tempname=$(mktemp)
-        curl -H "User-Agent: FCI/curl (flibusta catalog indexer; dev version)" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
+        curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
         cmp -s "$tempname" ./data/catalog.zip || (cd ./data && rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
 
     - name: git push
