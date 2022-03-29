@@ -26,7 +26,7 @@ jobs:
     steps:
     - name: test
       run: |
-        git clone .
+        git checkout
         ls -la
     
     - name: download & unzip
