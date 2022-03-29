@@ -37,12 +37,15 @@ jobs:
           git config user.email "ablaternae@users.noreply.github.com"
           
     - name: download & unzip
+      working-directory: ./data
       run: |
         tempname=$(mktemp)
-        cd ./data
         curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
-        cmp -s "$tempname" ./data/catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
+        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
         git status
+        git add -A
+        git status
+        [ -f ".updated" ] && echo A || echo NO
         #[ -f ".updated" ] && git add -A || (echo "Not that much different from the previous" && exit 0)
         #git commit -m "$COMMIT_MESSAGE"
         #git push
