@@ -26,7 +26,7 @@ jobs:
         # working-directory: data
 
     steps:
-    - name: git clone 
+    - name: git clone & config username
       run: |
         git clone --progress --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
         ls -la
@@ -39,11 +39,18 @@ jobs:
     - name: download & unzip
       run: |
         tempname=$(mktemp)
+        cd ./data
         curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
-        cmp -s "$tempname" ./data/catalog.zip || (cd ./data && rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
+        cmp -s "$tempname" ./data/catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
+        git status
+        #[ -f ".updated" ] && git add -A || (echo "Not that much different from the previous" && exit 0)
+        #git commit -m "$COMMIT_MESSAGE"
+        #git push
 
     - name: git push
       run: |
+        ls -la
+        git status
         [ -f "data/.updated" ] && git add -A || (echo "Not that much different from the previous" && exit 0)
         git commit -m "$COMMIT_MESSAGE"
         git push
