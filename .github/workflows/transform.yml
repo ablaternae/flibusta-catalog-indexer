@@ -10,12 +10,18 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   transform:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
 
     steps:
+    - name: init & soft install
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install -y sqlite
+    
     - name: git clone
       run: |
         git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
@@ -28,9 +34,16 @@ jobs:
         awk 'BEGIN {FS=";"; sum=0}; NF <= num_f {print $0}; NF > num_f {str=""; for ( i=1; i<=(NF) ;i++) {if (i<5 || i>=(5+NF -9)) {str=(str$i FS)} else {($i>"") && str=(str$i "||")}; } print substr(str,1,length(str)-1); sum++} ; END {sum} ' catalog.txt | tr -d \" > catalog.csv.txt
         ls -la
 
-    - name: create catalog.sqlite
+    - name: catalog_raw.sqlite from txt
+      working-directory: data
       run: |
-        sqlite catalog_raw.sqlite "drop table if exists catalog_raw;"
+        rm -f catalog_raw.sqlite
+        sqlite catalog_raw.sqlite "create table catalog_raw (x text);"
+        sqlite catalog_raw.sqlite <<EOF1
+        .mode csv catalog_raw
+        .import catalog.txt catalog_raw
+        EOF1
+
 
 
     - name: git push
