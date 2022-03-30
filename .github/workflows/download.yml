@@ -17,7 +17,7 @@ jobs:
       CATALOG_HTTP: https://flibusta.site/catalog/catalog.zip
       USER_AGENT: "User-Agent: FCI/curl (https://github.com/ablaternae/flibusta-catalog-indexer)"
       # https://flibusta.is/catalog/catalog.zip
-      COMMIT_MESSAGE: Update on $(date +'%Y-%m-%d %H:%M')
+      COMMIT_MESSAGE: Update on "$(date +'%Y-%m-%d %H:%M')"
       
     runs-on: ubuntu-20.04
     defaults:
@@ -49,7 +49,6 @@ jobs:
         [ ! -f "./data/.updated" ] && echo "Not that much different from the previous" && exit 0
         git add -A -f ./data
         git status
-        echo "$COMMIT_MESSAGE"
         git commit -m "$COMMIT_MESSAGE"
-        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
+        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
         
