@@ -38,7 +38,7 @@ jobs:
       working-directory: data
       run: |
         rm -f catalog_raw.sqlite
-        sqlite catalog_raw.sqlite "drop table catalog_raw;"
+        sqlite catalog_raw.sqlite "create table catalog_raw (x text);"
         sqlite catalog_raw.sqlite <<EOF1
         .mode csv catalog_raw
         .import catalog.txt catalog_raw
