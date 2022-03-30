@@ -45,9 +45,10 @@ jobs:
 
     - name: git push
       run: |
+        COMMIT_MESSAGE="Update on $(date +'%Y-%m-%d %H:%M')"
         [ ! -f "./data/.updated" ] && (echo "Not that much different from the previous" && exit 0)
         git status
         git add -A -f ./data
-        git commit -m "Update on $(date +'%Y-%m-%d %H:%M')"
+        git commit -m "$COMMIT_MESSAGE"
         git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
         
