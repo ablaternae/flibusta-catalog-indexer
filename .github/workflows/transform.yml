@@ -34,7 +34,8 @@ jobs:
     - name: chk date
       run: |
         ls -la
-        cat ./data/.update
+        #cat ./data/.update
+        ls -la ./data
           
     - name: csv fix
       working-directory: data
