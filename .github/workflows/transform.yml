@@ -23,6 +23,7 @@ jobs:
         #sudo apt-get install -y sqlite
         curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
         unzip sqlite.zip
+        ls -la
     
     - name: git clone
       run: |
@@ -41,8 +42,8 @@ jobs:
       shell: bash
       run: |
         rm -f catalog.sqlite
-        sqlite catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
-        echo -e ".mode csv catalog\n.separator ';'\n.import --skip 1 catalog.csv.txt catalog" | sqlite catalog.sqlite
+        ../sqlite catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
+        echo -e ".mode csv catalog\n.separator ';'\n.import --skip 1 catalog.csv.txt catalog" | ../sqlite catalog.sqlite
         ls -la
 
 
