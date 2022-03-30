@@ -16,24 +16,31 @@ jobs:
         shell: bash
 
     steps:
-    - name: init & install
-      run: |
-        #sudo apt-get update
-        #sudo apt-get upgrade
-        #sudo apt-get install -y sqlite
-        curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
-        unzip sqlite.zip
-        ls -la
     
     - name: git clone
       run: |
         git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
-        ls -la data
         
+    - name: git config username
+      run: |
+        git config user.name "d;)"
+        git config user.email "ablaternae@users.noreply.github.com"
+        
+    - name: sqlite downld
+      run: |
+        curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
+        unzip -j sqlite.zip
+        
+    - name: chk date
+      run: |
+        ls -la
+        #cat ./data/.update
+        ls -la ./data
+          
     - name: csv fix
       working-directory: data
       run: |
-        echo "fairytale is BEGAN NOW"
+        echo "fairytale is began now"
         awk 'BEGIN {FS=";"; sum=0}; NF <= num_f {print $0}; NF > num_f {str=""; for ( i=1; i<=(NF) ;i++) {if (i<5 || i>=(5+NF -9)) {str=(str$i FS)} else {($i>"") && str=(str$i "||")}; } print substr(str,1,length(str)-1); sum++} ; END {sum} ' catalog.txt | tr -d \" > catalog.csv.txt
         ls -la
 
@@ -42,15 +49,23 @@ jobs:
       shell: bash
       run: |
         rm -f catalog.sqlite
-        ../sqlite catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
-        echo -e ".mode csv catalog\n.separator ';'\n.import --skip 1 catalog.csv.txt catalog" | ../sqlite catalog.sqlite
+        ../sqlite3 catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
+        ../sqlite3 catalog.sqlite -csv -separator ';' ".import --skip 1 catalog.csv.txt catalog"
         ls -la
 
+    - name: dumps
+      working-directory: data
+      shell: bash
+      run: |
+        ../sqlite3 catalog.sqlite -csv -separator ',' -header "select * from catalog;" > catalog.csv 
+        #../sqlite3 catalog.sqlite ".dump" | tee catalog.sql | gzip -c > catalog.sql.gz 
+        ../sqlite3 catalog.sqlite ".dump" | gzip -c > catalog.sql.gz 
+        echo "and they lived happy ever after"
 
     - name: git push
       run: |
         [ ! -f "./data/.updated" ] && echo "Not that much different from the previous" && exit 0
-        COMMIT_MESSAGE="Update on $(date +'%Y-%m-%d %H:%M')"
+        COMMIT_MESSAGE="dumps update on $(date +'%Y-%m-%d %H:%M')"
         git add -A -f ./data
         git status
         git commit -m "$COMMIT_MESSAGE"
