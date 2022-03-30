@@ -7,15 +7,17 @@ on:
   workflow_dispatch:
   # Run action every 4 hour at 05 min
   schedule:
-  - cron: "5 */4 * * *"
+  - cron: "5 5 * * *"
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  download:
     env:
       CATALOG_FILE: catalog.zip
       CATALOG_HTTP: https://flibusta.site/catalog/catalog.zip
+      USER_AGENT: "User-Agent: FCI/curl (https://github.com/ablaternae/flibusta-catalog-indexer)"
       # https://flibusta.is/catalog/catalog.zip
+      COMMIT_MESSAGE: Update on "$(date +'%Y-%m-%d %H:%M')"
       
     runs-on: ubuntu-20.04
     defaults:
@@ -24,12 +26,31 @@ jobs:
         # working-directory: data
 
     steps:
-    - name: git clone 
+    - name: git clone
       run: |
-        git clone --progress --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://github.com/${GITHUB_REPOSITORY}.git" .
+        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
         ls -la
     
-    - name: download & unzip
+    - name: git config username
       run: |
-        curl -O http://flibusta.is/catalog/catalog.zip -H "User-Agent: FCI/curl (flibusta catalog indexer; dev version)"
-        unzip catalog.zip   
+          git config user.name "d;)"
+          git config user.email "ablaternae@users.noreply.github.com"
+          
+    - name: download & unzip
+      working-directory: ./data
+      run: |
+        rm -f .updated
+        tempname=$(mktemp)
+        curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
+        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && echo $(date +'%Y-%m-%d %H:%M') >> .updated) 
+
+    - name: git push
+      run: |
+        [ ! -f "./data/.updated" ] && echo "Not that much different from the previous" && exit 0
+        COMMIT_MESSAGE="Update on $(date +'%Y-%m-%d %H:%M')"
+        git add -A -f ./data
+        git status
+        git commit -m "$COMMIT_MESSAGE"
+        git push "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+        
+        
