@@ -38,17 +38,15 @@ jobs:
       run: |
         curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
         unzip -j sqlite.zip
-        ls -la
 
     - name: create table catalog.sqlite from catalog.txt
       working-directory: data
       shell: bash
       run: |
         rm -f catalog.sqlite
-        ../sqlite catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
-        ../sqlite catalog.sqlite -csv -separator ';' ".import --skip 1 catalog.csv.txt catalog"
+        ../sqlite3 catalog.sqlite "create table if not exists catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);"
+        ../sqlite3 catalog.sqlite -csv -separator ';' ".import --skip 1 catalog.csv.txt catalog"
         ls -la
-
 
     - name: git push
       run: |
