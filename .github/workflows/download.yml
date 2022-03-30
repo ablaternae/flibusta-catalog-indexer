@@ -28,7 +28,7 @@ jobs:
     steps:
     - name: git clone
       run: |
-        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
         ls -la
     
     - name: git config username
@@ -39,16 +39,19 @@ jobs:
     - name: download & unzip
       working-directory: ./data
       run: |
+        rm -f .updated
         tempname=$(mktemp)
         curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
-        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && touch .updated) 
+        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && echo $(date +'%Y-%m-%d %H:%M') >> .updated) 
 
     - name: git push
       run: |
-        COMMIT_MESSAGE="Update on $(date +'%Y-%m-%d %H:%M')"
         [ ! -f "./data/.updated" ] && echo "Not that much different from the previous" && exit 0
+        COMMIT_MESSAGE="Update on $(date +'%Y-%m-%d %H:%M')"
         git add -A -f ./data
         git status
         git commit -m "$COMMIT_MESSAGE"
-        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
+        # git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${INPUTS_BRANCH:-${GITHUB_REF##*/}}"
+        git push "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+        
         
