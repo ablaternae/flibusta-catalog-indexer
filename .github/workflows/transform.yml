@@ -20,7 +20,6 @@ jobs:
     - name: git clone
       run: |
         git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
-        ls -la data
         
     - name: git config username
       run: |
@@ -34,12 +33,13 @@ jobs:
         
     - name: chk date
       run: |
-        cat data/.update
+        ls -la
+        cat ./data/.update
           
     - name: csv fix
       working-directory: data
       run: |
-        echo "fairytale is BEGAN NOW"
+        echo "fairytale is began now"
         awk 'BEGIN {FS=";"; sum=0}; NF <= num_f {print $0}; NF > num_f {str=""; for ( i=1; i<=(NF) ;i++) {if (i<5 || i>=(5+NF -9)) {str=(str$i FS)} else {($i>"") && str=(str$i "||")}; } print substr(str,1,length(str)-1); sum++} ; END {sum} ' catalog.txt | tr -d \" > catalog.csv.txt
         ls -la
 
@@ -60,6 +60,7 @@ jobs:
         ../sqlite3 catalog.sqlite -json "select * from catalog;" > catalog.json 
         #sqlite catalog.sqlite ".dump" > catalog.sql 
         ../sqlite3 catalog.sqlite ".dump" | tee catalog.sql | gzip -c > catalog.sql.gz 
+        echo "and they lived happy ever after"
 
     - name: git push
       run: |
