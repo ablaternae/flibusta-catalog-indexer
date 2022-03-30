@@ -18,8 +18,9 @@ jobs:
     steps:
     - name: init & soft install
       run: |
-        apt-get update && apt-get upgrade
-        apt-get install -y sqlite
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install -y sqlite
     
     - name: git clone
       run: |
