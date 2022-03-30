@@ -1,0 +1,29 @@
+
+name: convert catalog to syntaxly correct format
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "15 5 * * *"
+  # 10 min after download-job
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  transform:
+    env:
+
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: git clone
+      run: |
+        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
+        ls -la data
+        
+    - name: csv fix
+      working-directory: data
+      run: |
+        awk 'BEGIN {FS=";"; sum=0}; NF <= num_f {print $0}; NF > num_f {str=""; for ( i=1; i<=(NF) ;i++) {if (i<5 || i>=(5+NF -9)) {str=(str$i FS)} else {($i>"") && str=(str$i "||")}; } print substr(str,1,length(str)-1); sum++} ; END {sum} ' catalog.txt | tr -d \" > catalog.csv.txt
