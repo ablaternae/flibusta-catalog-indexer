@@ -16,6 +16,12 @@ jobs:
         shell: bash
 
     steps:
+    - name: init & soft install
+      run: |
+        apt-get update
+        apt-get upgrade
+        apt-get install sqlite
+    
     - name: git clone
       run: |
         git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
