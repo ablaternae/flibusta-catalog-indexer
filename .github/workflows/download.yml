@@ -5,7 +5,7 @@ name: download catalog & push to rep
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  # Run action every 4 hour at 05 min
+  # Run action 05:05 everyday
   schedule:
   - cron: "5 5 * * *"
   
@@ -42,7 +42,7 @@ jobs:
         rm -f .updated
         tempname=$(mktemp)
         curl -H "$USER_AGENT" -o "$tempname" "http://flibusta.is/catalog/catalog.zip"
-        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && echo $(date +'%Y-%m-%d %H:%M') >> .updated) 
+        cmp -s "$tempname" catalog.zip || (rm -f catalog.zip catalog.txt && cp -f "$tempname" catalog.zip && unzip catalog.zip && echo $(date +'%Y-%m-%d %H:%M') > .updated) 
 
     - name: git push
       run: |
