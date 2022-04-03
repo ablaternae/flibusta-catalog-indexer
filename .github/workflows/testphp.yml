@@ -17,4 +17,4 @@ jobs:
       run: php -r "phpinfo();"
     - name: sqlite
       run: |
-        php -r '$db = new SQLite3('test.sqlite'); var_dump( $db );'
+        php -r '$db = new SQLite3("test.sqlite"); var_dump( $db );'
