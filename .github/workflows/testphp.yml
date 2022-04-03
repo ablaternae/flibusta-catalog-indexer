@@ -9,9 +9,12 @@ jobs:
         shell: bash
 
     steps:
-    - name: 1
+    - name: version
       run: |
         php -v 
         php -i
     - name: phpinfo
       run: php -r "phpinfo();"
+    - name: sqlite
+      run: |
+        php -r "$db = new SQLite3('test.sqlite'); var_dump( $db );"
