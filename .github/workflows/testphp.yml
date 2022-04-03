@@ -1,0 +1,16 @@
+name: test
+on:
+  workflow_dispatch:
+jobs:
+  testphp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: 1
+      run: |
+        php -v || echo 'not 1'
+        php7 -v || echo 'not 7'
+        php8 -v || echo 'not 8'
