@@ -11,6 +11,7 @@ jobs:
     steps:
     - name: 1
       run: |
-        php -v || echo 'not 1'
-        php7 -v || echo 'not 7'
-        php8 -v || echo 'not 8'
+        php -v 
+        php -i
+    - name: phpinfo
+      run: php -r "phpinfo();"
