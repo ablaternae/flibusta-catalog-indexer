@@ -4,8 +4,8 @@ name: convert catalog to syntaxly correct format
 on:
   workflow_dispatch:
   schedule:
-  - cron: "15 5 * * *"
-  # 10 min after download-job
+  - cron: "20 5 * * *"
+  # 15 min after download-job
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,8 +32,9 @@ jobs:
         unzip -j sqlite.zip
         
     - name: chk date
+    # todo проверять дату обновления
       run: |
-        ls -la
+        #ls -la
         #cat ./data/.update
         ls -la ./data
           
@@ -60,6 +61,7 @@ jobs:
         ../sqlite3 catalog.sqlite -csv -separator ',' -header "select * from catalog;" > catalog.csv 
         #../sqlite3 catalog.sqlite ".dump" | tee catalog.sql | gzip -c > catalog.sql.gz 
         ../sqlite3 catalog.sqlite ".dump" | gzip -c > catalog.sql.gz 
+        gzip catalog.sqlite
         echo "and they lived happy ever after"
 
     - name: git push
