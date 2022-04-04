@@ -76,7 +76,11 @@ $table_lat_cyr = array(
 );
 
 //  translit is informal transliteration
-function translit($text, $tr_table=$table_cyr_lat) {
+function translit($text, $tr_table=null) {
+  global $table_cyr_lat;
+  if (is_null($tr_table)) {
+  	$tr_table = $table_cyr_lat;
+  }
   return strtr($text, $tr_table);
 }
 

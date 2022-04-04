@@ -1,5 +1,5 @@
 <?php
-require (__DIR__.'/func.php);
+require (__DIR__.'/func.php');
 
 $db = new SQLite3('catalog.sqlite');
 
