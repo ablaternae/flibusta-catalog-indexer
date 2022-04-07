@@ -1,4 +1,6 @@
 <?php
+//	index.bak
+
 require (__DIR__.'/func.php');
 
 $db = new SQLite3('catalog.sqlite');
@@ -34,6 +36,20 @@ $db->exec('UPDATE catalog SET wholename = trim(surname||" "||name||" "||patronym
 //
 //$db->exec('UPDATE catalog SET mtfn_title = metaphone(translit(title)) ;');
 //$db->exec('CREATE INDEX idx_mtfn_title ON catalog ( mtfn_title ) ;');
+
+
+$db->exec('CREATE TABLE book (id integer not null unique, title text, subtitle text, year int, lang char(2) );');
+$db->exec('CREATE TABLE author (surname varchar(100), name varchar(100), patronymic varchar(100), wholename varchar(255) );');
+$db->exec('CREATE TABLE collection (desc varchar(100) index idx_desc (desc) );');
+
+$db->exec('insert into book ( id, title, subtitle, year, lang ) 
+select c.id, c.title, c.subtitle, c.year, c.lang
+from catalog as c group by c.id order by c.id;');
+$db->exec('CREATE INDEX idx_title ON book ( lower(title) ) WHERE title!="" OR title IS NOT NULL;');
+
+$db->exec('insert into author (surname, name, patronymic, wholename) 
+select c.surname, c.name, c.patronymic, c.surname||" "||c.name||" "||c.patronymic 
+from catalog as c group by c.surname, c.name order by c.surname;');
 
 
 $db->exec('CREATE TABLE mtfn_index (id integer, x text);');

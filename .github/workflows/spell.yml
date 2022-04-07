@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: php
       run: |
-        php -f spell.php
+        php -d memory_limit=4096M -f spell.php
         
     #- name: sqlite
     #  run: |
