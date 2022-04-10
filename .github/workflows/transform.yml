@@ -60,8 +60,8 @@ jobs:
       run: |
         ../sqlite3 catalog.sqlite -csv -separator ',' -header "select * from catalog;" > catalog.csv 
         #../sqlite3 catalog.sqlite ".dump" | tee catalog.sql | gzip -c > catalog.sql.gz 
-        ../sqlite3 catalog.sqlite ".dump" | gzip -c > catalog.sql.gz 
-        gzip catalog.sqlite
+        ../sqlite3 catalog.sqlite ".dump" | gzip -c -f > catalog.sql.gz 
+        gzip -f catalog.sqlite
         echo "and they lived happy ever after"
 
     - name: git push
