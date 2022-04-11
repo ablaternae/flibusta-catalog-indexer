@@ -1,8 +1,8 @@
-name: cataloguing
+name: indexer db
 on:
   workflow_dispatch:
 jobs:
-  testphp:
+  indexer:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,7 +32,7 @@ jobs:
     - name: sqlite to json
       working-directory: data
       run: |
-        ../sqlite -json catalog.sqlite "select id, t, n, x from mf_index" > index.json
+        ../sqlite3 -json catalog.sqlite "select id, t, n, x from mf_index" > index.json
       
     - name: git checkout & push
       working-directory: data
