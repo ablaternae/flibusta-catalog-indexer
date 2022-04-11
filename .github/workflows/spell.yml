@@ -9,14 +9,36 @@ jobs:
         shell: bash
 
     steps:
-    - name: php
+    
+    - name: git clone
       run: |
-        php -d memory_limit=4096M -f spell.php
+        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
         
-    #- name: sqlite
-    #  run: |
-    #    php -r '$db = new SQLite3("test.sqlite"); var_dump( $db->version() );'
-    #    php -r '$db = new SQLite3("test.sqlite"); var_dump( $db->query("select sqlite_source_id();")->fetchArray(SQLITE3_ASSOC) );'
-    #    php -r '$db = new SQLite3("test.sqlite"); var_dump( $db->query("select sqlite_version();")->fetchArray(SQLITE3_ASSOC) );'
-    #    php -r '$db = new SQLite3("test.sqlite"); var_dump( $db->query("PRAGMA user_version;")->fetchArray(SQLITE3_ASSOC) );'
-    #    php -r '$db = new SQLite3("test.sqlite"); var_dump( $db->query("PRAGMA schema_version;")->fetchArray(SQLITE3_ASSOC) );'
+    - name: git config username
+      run: |
+        git config user.name "d;)"
+        git config user.email "ablaternae@users.noreply.github.com"
+        
+    - name: sqlite downld
+      run: |
+        curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
+        unzip -j sqlite.zip
+    
+    - name: indexer
+      working-directory: data
+      run: |
+        php -d memory_limit=4096M -f ../script/index3-mf.php
+        
+    - name: sqlite to json
+      working-directory: data
+      run: |
+        ../sqlite -json catalog.sqlite "select id, t, n, x from mf_index" > index.json
+      
+    - name: git checkout & push
+      working-directory: data
+      run: |
+        COMMIT_MESSAGE="index.json update on $(date +'%Y-%m-%d %H:%M')"
+        git checkout gh-pages
+        git add index.json
+        git commit -m "$COMMIT_MESSAGE"
+        git push
