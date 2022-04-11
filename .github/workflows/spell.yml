@@ -39,14 +39,11 @@ jobs:
     - name: sqlite to json
       working-directory: data
       run: |
-        ../sqlite3 -json catalog.sqlite "select id, t, n, x from mf_index order by id;" > index.json
+        ../sqlite3 -json catalog.sqlite "select id, t, n, x from mf_index order by id;" > ../docs/index.json
       
     - name: git checkout & push
-      working-directory: data
       run: |
         COMMIT_MESSAGE="index.json update on $(date +'%Y-%m-%d %H:%M')"
-        git fetch --all
-        git checkout -b "gh-pages"
-        git add index.json
+        git add ./docs/
         git commit -m "$COMMIT_MESSAGE"
         git push origin gh-pages
