@@ -24,6 +24,12 @@ jobs:
         curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
         unzip -j sqlite.zip
     
+    - name: db upload
+      working-directory: data
+      run: |
+        ../sqlite3 catalog.sqlite "create table if not exists catalog (surname varchar(100), name varchar(100), patronymic varchar(100), title text, subtitle text, language char(2), year int, series text, id integer);"
+        ../sqlite3 catalog.sqlite -csv -separator ";" ".import --skip 1 catalog.csv.txt catalog"
+        
     - name: indexer
       working-directory: data
       run: |
