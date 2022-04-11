@@ -13,6 +13,7 @@ jobs:
     - name: git clone
       run: |
         git clone --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
+        git branch -a
         
     - name: git config username
       run: |
@@ -45,7 +46,7 @@ jobs:
       run: |
         COMMIT_MESSAGE="index.json update on $(date +'%Y-%m-%d %H:%M')"
         git fetch --all
-        git checkout "gh-pages"
+        git checkout -b "gh-pages"
         git add index.json
         git commit -m "$COMMIT_MESSAGE"
-        git push
+        git push origin gh-pages
