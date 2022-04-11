@@ -1,4 +1,4 @@
-name: indexer db
+name: indexer
 on:
   workflow_dispatch:
 jobs:
@@ -12,7 +12,8 @@ jobs:
     
     - name: git clone
       run: |
-        git clone --single-branch --branch "${INPUTS_BRANCH:-${GITHUB_REF##*/}}" --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
+        git clone --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
+        git branch -a
         
     - name: git config username
       run: |
@@ -24,6 +25,12 @@ jobs:
         curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
         unzip -j sqlite.zip
     
+    - name: db upload
+      working-directory: data
+      run: |
+        ../sqlite3 catalog.sqlite "create table if not exists catalog (surname varchar(100), name varchar(100), patronymic varchar(100), title text, subtitle text, language char(2), year int, series text, id integer);"
+        ../sqlite3 catalog.sqlite -csv -separator ";" ".import --skip 1 catalog.csv.txt catalog"
+        
     - name: indexer
       working-directory: data
       run: |
@@ -32,13 +39,14 @@ jobs:
     - name: sqlite to json
       working-directory: data
       run: |
-        ../sqlite3 -json catalog.sqlite "select id, t, n, x from mf_index" > index.json
+        ../sqlite3 -json catalog.sqlite "select id, t, n, x from mf_index order by id;" > index.json
       
     - name: git checkout & push
       working-directory: data
       run: |
         COMMIT_MESSAGE="index.json update on $(date +'%Y-%m-%d %H:%M')"
-        git checkout gh-pages
+        git fetch --all
+        git checkout -b "gh-pages"
         git add index.json
         git commit -m "$COMMIT_MESSAGE"
-        git push
+        git push origin gh-pages
