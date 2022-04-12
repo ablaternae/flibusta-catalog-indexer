@@ -45,5 +45,13 @@
             </form>
         </div>
     </div>
+    
+<script src="https://requirejs.org/docs/release/2.3.3/minified/require.js"></script>
+<script src="./zepto.min.js"></script>
+<script async type="module">
+  fetch('https://ablaternae.github.io/flibusta-catalog-indexer/index.json')
+    .then(response => response.json())
+    .then(json => console.log(json));
+</script>
 </body>
 </html>
