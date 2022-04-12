@@ -10,7 +10,7 @@
 <body>
     <div class="hero container edges centered py-14">
         <div class="hero-head">
-            <h1 class="">поиск по каталогу</h1>
+            <h1 class="">поиск книг</h1>
         </div>
         
         <nav class="nav">
@@ -40,18 +40,20 @@
                         <input type="text" class="input" />
                         <button class="button button-primary"> ? </button>
                     </div>
-                    <label>сначала фамилия автора. не больше трёх слов всего.</label>
+                    <label><small>сначала фамилия автора. не больше трёх слов всего.</small></label>
                 </div>
             </form>
         </div>
     </div>
-    
+
+<!--    
 <script src="https://requirejs.org/docs/release/2.3.3/minified/require.js"></script>
+-->
 <script src="./zepto.js"></script>
-<script async type="module">
-  fetch('https://ablaternae.github.io/flibusta-catalog-indexer/index.json')
-    .then(response => response.json())
-    .then(json => console.log(json));
+<script>
+  //fetch('https://ablaternae.github.io/flibusta-catalog-indexer/index.json')
+  //  .then(response => response.json())
+  //  .then(json => console.log(json));
 </script>
 </body>
 </html>
