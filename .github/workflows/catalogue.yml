@@ -38,6 +38,8 @@ jobs:
     - name: indexer
       working-directory: data
       run: |
+        php -d memory_limit=4096M -f ../script/index4.php
+        php -d memory_limit=4096M -f ../script/index5.php
         php -d memory_limit=4096M -f ../script/catalogue.php
         
     - name: git checkout & push
