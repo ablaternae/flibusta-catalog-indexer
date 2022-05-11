@@ -40,10 +40,11 @@ $word_upset = function (int $id, string $string) use ($db, $fh) {
 };
 
 
-$db->exec('drop table if exists wordy_index; create table wordy_index (w varchar, id integer);');
-$db->createFunction('word_upset', $word_upset);
-$db->exec('select word_upset(id, w) from wordy_single;');
-exit();
+//	тестовый блок на готовой таблице
+//$db->exec('drop table if exists wordy_index; create table wordy_index (w varchar, id integer);');
+//$db->createFunction('word_upset', $word_upset);
+//$db->exec('select word_upset(id, w) from wordy_single;');
+//exit();
 // sqlite.exe catalog.sqlite -csv -separator "," ".import wordy_index.csv wordy_index"
 
 /**
