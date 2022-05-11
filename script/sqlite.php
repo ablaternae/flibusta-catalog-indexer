@@ -5,6 +5,7 @@ $db = new SQLite3('catalog.sqlite');
 
 $db->createFunction('lower', 'mb_strtolower', 1, SQLITE3_DETERMINISTIC);
 $db->createFunction('upper', 'mb_strtoupper', 1, SQLITE3_DETERMINISTIC);
+$db->createFunction('strlen', 'mb_strlen', 1, SQLITE3_DETERMINISTIC);
 //  $db->createFunction('ltrim', 'ltrim');
 //  $db->createFunction('rtrim', 'rtrim');
 //  $db->createFunction('trim', 'trim');
@@ -14,6 +15,8 @@ $db->createFunction('implode', 'implode');
 $db->createFunction('metaphone', 'metaphone', -1, SQLITE3_DETERMINISTIC);
 $db->createFunction('translit', 'translit', 1, SQLITE3_DETERMINISTIC);
 return;
+
+
 //  CREATE TABLE catalog (surname varchar(255), name varchar(255), patronymic varchar(255), title text, subtitle text, language char(2), year int, series text, id integer);
 
 $db->exec('CREATE INDEX idx_name ON catalog ( lower(name) ) WHERE name!="" OR name IS NOT NULL;');
