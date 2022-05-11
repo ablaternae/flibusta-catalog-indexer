@@ -1,0 +1,48 @@
+name: indexer
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "35 5 * * *"
+  # 15 min after transform-job
+
+jobs:
+  indexer:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    
+    - name: git clone
+      run: |
+        git clone --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
+        git branch -a
+        
+    - name: git config username
+      run: |
+        git config user.name "d;)"
+        git config user.email "ablaternae@users.noreply.github.com"
+        
+    - name: sqlite downld
+      run: |
+        curl -o sqlite.zip https://www.sqlite.org/2022/sqlite-tools-linux-x86-3380200.zip
+        unzip -j sqlite.zip
+    
+    - name: db upload
+      working-directory: data
+      run: |
+        ../sqlite3 catalog.sqlite "create table if not exists catalog (surname varchar(100), name varchar(100), patronymic varchar(100), title text, subtitle text, language char(2), year int, series text, id integer);"
+        ../sqlite3 catalog.sqlite -csv -separator ";" ".import --skip 1 catalog.csv.txt catalog"
+        
+    - name: indexer
+      working-directory: data
+      run: |
+        php -d memory_limit=4096M -f ../script/catalogue.php
+        
+    - name: git checkout & push
+      run: |
+        COMMIT_MESSAGE="index update on $(date +'%Y-%m-%d %H:%M')"
+        git add ./docs/
+        git commit -m "$COMMIT_MESSAGE"
+        git push
