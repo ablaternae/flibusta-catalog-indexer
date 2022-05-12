@@ -38,6 +38,7 @@ jobs:
       working-directory: data
       run: |
         time php -d memory_limit=4096M -f ../script/index4.php
+        time ../sqlite3 catalog.sqlite -csv -separator "," ".import wordy_index.csv wordy_index"
         time php -d memory_limit=4096M -f ../script/index5.php
         time php -d memory_limit=4096M -f ../script/catalogue.php
         
