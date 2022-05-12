@@ -42,7 +42,7 @@ function search(str) {
   }
   console.log('index',index);
   let res = _.map( index, function(v,k){ return v['i']; });
-  console.log(_.intersection( *res) );
+  
   let result = _.intersection( _.map( index, function(v,k){ return v['i']; }) );
   console.log('result',result);
   
