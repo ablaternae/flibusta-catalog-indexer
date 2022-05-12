@@ -5,7 +5,8 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/superkube@latest/dist/superkube.min.css">
+    <!-- link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/superkube@latest/dist/superkube.min.css" -->
+    <link rel="stylesheet" href="./superkube.min.css">
 </head>
 <body>
     <div class="hero container edges centered py-14">
@@ -24,23 +25,20 @@
                 <li class="nav-item">
                     <a href="//github.com/ablaternae/flibusta-catalog-indexer/issues" class="nav-link">обратная связь</a>
                 </li>
-                <li class="nav-item">
-                    собрано с помощью &nbsp;<a href="//github.com/Alexey-T/CudaText" class="nav-link">чудотекста</a>
-                    &nbsp; и &nbsp; <a href="//github.com/imperavi/superkube" class="nav-link">суперкубика</a>
-                </li>
             </ul>
         </nav>
         
         <p></p>
         
         <div class="hero-body">
-            <form class="form" onsubmit="return false;">
+            <form class="form" method="get">
+            <!-- form class="form" method="get" onsubmit="if (a=pre_submit(this.s.value)) { this.s.value=a; }; return !!a;" -->
                 <div class="form-item">
                     <div class="input-group">
-                        <input type="text" class="input" />
-                        <button class="button button-primary"> ? </button>
+                        <input type="text" class="input" name="s">
+                        <button type="submit" class="button button-primary"> ? </button>
                     </div>
-                    <label><small>сначала фамилия автора. не больше трёх слов всего.</small></label>
+                    <label><small>специальных правил нет, разделяйте слова пробелом</small></label>
                 </div>
             </form>
         </div>
@@ -48,9 +46,32 @@
 
 <!--    
 <script src="https://requirejs.org/docs/release/2.3.3/minified/require.js"></script>
+<script src=https://words.github.io/metaphone/index.module.js type=module></script><script src=https://words.github.io/metaphone/index.nomodule.js nomodule></script>
 -->
-<script src="./zepto.js"></script>
+<script src="./zepto.min.js"></script>
+<script src="./underscore.min.js"></script>
+<script src="./metaphone.js"></script>
+<script src="./func.js"></script>
 <script>
+  $().ready(()=>{
+    
+    let $form = $('form');
+    let $s = $('input[name=s]', $form);
+    
+    $form.submit(()=>{
+      let a = str_prepare($s.val()); 
+      if (!!a) { $s.val(a); }
+      return !!a;
+    });
+    
+    //  onload
+    if (location.search) {
+      let s = str_prepare( (new URLSearchParams(location.search)).get('s') );
+      $s.val(s);
+      search(s);
+    }
+    console.log('LOAD');
+  });
   //fetch('https://ablaternae.github.io/flibusta-catalog-indexer/index.json')
   //  .then(response => response.json())
   //  .then(json => console.log(json));
