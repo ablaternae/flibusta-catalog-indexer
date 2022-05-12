@@ -19,7 +19,7 @@ $word_upset = function (int $id, string $string) use ($db, $fh) {
 		$a = array_merge($a,
 			array_unique(
 				array_filter( 
-					array_map( function($e) { return mb_strlen($e)>STRLEN_MIN ? metaphone($e) : null;}
+					array_map( function($e) { return intval($e) ?: (mb_strlen($e)>STRLEN_MIN ? metaphone($e) : null);}
 					//	оставить только слова и цифры
 					, preg_split("/[^\w\d]+/im", translit( $s )) )
 				)
