@@ -17,7 +17,6 @@ jobs:
     - name: git clone
       run: |
         git clone --depth 1 "https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" .
-        git branch -a
         
     - name: git config username
       run: |
@@ -42,9 +41,9 @@ jobs:
         time php -d memory_limit=4096M -f ../script/index5.php
         time php -d memory_limit=4096M -f ../script/catalogue.php
         
-    - name: git checkout & push
+    - name: git push
       run: |
         COMMIT_MESSAGE="index update on $(date +'%Y-%m-%d %H:%M')"
         git add ./docs/
-        git commit -m "$COMMIT_MESSAGE"
+        git commit -m "$COMMIT_MESSAGE" || exit
         git push
