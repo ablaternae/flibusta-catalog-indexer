@@ -6,9 +6,9 @@ function str_prepare(str) {
 
 
 
-function search(str) {
+function search(search_str) {
   let index = [];
-  for (let word of str.split(' ')) {
+  for (let word of search_str.split(' ')) {
      
     let w = translit(word).metaphone();
     let dir = './i/'+w.substring(0,2)+'/';
@@ -47,13 +47,58 @@ function search(str) {
   //console.log('result',result,res);
   
   if (!!index) {
-    $result = $('.show-result');
-    $listmark = $('.one-word', $result);
+    $div = $('.show-result');
+    $listmark = $('.words', $div);
     _.map( index, function(v,k){
-      console.log('insert ',v['word']);
+      //console.log('insert ',v['word']);
       $listmark.append('<li class="list-item">Найдено <i>'+v['word']+'</i>: '+v['i'].length+'</li>'); 
-      return v['i']; 
+      //return v['i']; 
     });
+    
+    res_ids = _.reduce( _.map(index,(e)=>{return e.i})
+      , function(a,b){return _.intersection(a, b);} );
+    $listmark.append('<li class="list-item">Всего результатов "<b>'+search_str+'</b>": '+res_ids.length+'</li>');
+       
+    result = []
+    for (let id of res_ids) {
+    
+      let dir = './i/'+String(id).substring(0,3)+'/';
+      console.log(dir,id);
+    
+      $.ajax({
+        type: 'GET',
+        url: dir+id+'.json',
+        async: false,   //  NB
+        dataType: 'json',
+        timeout: 3000,  //  ms
+        success: function(data, status, xhr){
+          console.log('ID '+id+' getJSON done');
+          //console.log(data);
+          
+          result[result.length] = data;
+        },
+        error: function(xhr, type, status){
+          console.log(id,'dont load:', type, status);
+          //result[result.length] = {'word':word,i:[],w:''};
+        }
+      });
+    }
+    
+    result = _.shuffle(result).slice(0,12);
+    console.log(result);
+    
+    $booklist = $('.books', $div);
+    _.map( result, function(v,k){
+      //console.log('insert ',v['word']);
+      $booklist.append('<li class="list-item"><small>'
+        +'<a target=_blank href="//flibusta.is/b/'+v.i+'">ID '+v.i+'</a> '
+        +'<a target=_blank href="//flibusta.is/b/'+v.i+'/fb2">fb2</a> '
+        +'<a target=_blank href="//flibusta.is/b/'+v.i+'/epub">epub</a></small> '
+        +'<b>'+v.t+'</b> <i>(<small>'+v.n+'</small>)</i></li>'
+      ); 
+    });
+
+    
   }
 }
 
