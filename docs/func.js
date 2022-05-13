@@ -49,11 +49,14 @@ function search(search_str) {
   if (!!index) {
     $div = $('.show-result');
     $listmark = $('.words', $div);
-    _.map( index, function(v,k){
-      //console.log('insert ',v['word']);
-      $listmark.append('<li class="list-item">Найдено <i>'+v['word']+'</i>: '+v['i'].length+'</li>'); 
-      //return v['i']; 
-    });
+    
+    if (index.length>1) {
+      _.map( index, function(v,k){
+        //console.log('insert ',v['word']);
+        $listmark.append('<li class="list-item">Найдено <i>'+v['word']+'</i>: '+v['i'].length+'</li>'); 
+        //return v['i']; 
+      });
+    }
     
     res_ids = _.reduce( _.map(index,(e)=>{return e.i})
       , function(a,b){return _.intersection(a, b);} );
