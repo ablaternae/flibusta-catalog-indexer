@@ -58,7 +58,8 @@ function search(search_str) {
     res_ids = _.reduce( _.map(index,(e)=>{return e.i})
       , function(a,b){return _.intersection(a, b);} );
     $listmark.append('<li class="list-item">Всего результатов "<b>'+search_str+'</b>": '+res_ids.length+'</li>');
-       
+
+    res_ids = _.shuffle(res_ids).slice(0,12);       
     result = []
     for (let id of res_ids) {
     
@@ -84,7 +85,7 @@ function search(search_str) {
       });
     }
     
-    result = _.shuffle(result).slice(0,12);
+    //result = _.shuffle(result).slice(0,12);
     console.log(result);
     
     $booklist = $('.books', $div);
