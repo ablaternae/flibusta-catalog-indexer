@@ -37,17 +37,23 @@ function search(str) {
       },
       error: function(xhr, type, status){
         console.log(word,'dont load:', type, status);
+        index[index.length] = {'word':word,i:[],w:''};
       }
     });
   }
   console.log('index',index);
-  let res = _.map( index, function(v,k){ return v['i']; });
+  //let res = _.map( index, function(v,k){ return v['i']; });
+  //let result = _.intersection( _.map( index, function(v,k){ return v['i']; }) );
+  //console.log('result',result,res);
   
-  let result = _.intersection( _.map( index, function(v,k){ return v['i']; }) );
-  console.log('result',result);
-  
-  if (!!result) {
-    
+  if (!!index) {
+    $result = $('.show-result');
+    $listmark = $('.one-word', $result);
+    _.map( index, function(v,k){
+      console.log('insert ',v['word']);
+      $listmark.append('<li class="list-item">Найдено <i>'+v['word']+'</i>: '+v['i'].length+'</li>'); 
+      return v['i']; 
+    });
   }
 }
 
