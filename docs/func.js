@@ -95,9 +95,9 @@ function search(search_str) {
     _.map( result, function(v,k){
       //console.log('insert ',v['word']);
       $booklist.append('<li class="list-item"><small>'
-        +'<a target=_blank href="//flibusta.is/b/'+v.i+'">ID '+v.i+'</a> '
-        +'<a target=_blank href="//flibusta.is/b/'+v.i+'/fb2">fb2</a> '
-        +'<a target=_blank href="//flibusta.is/b/'+v.i+'/epub">epub</a></small> '
+        +'<a target=_blank href="//flib.flibusta.is/b/'+v.i+'">ID '+v.i+'</a> '
+        +'<a target=_blank href="//flib.flibusta.is/b/'+v.i+'/fb2">fb2</a> '
+        +'<a target=_blank href="//flib.flibusta.is/b/'+v.i+'/epub">epub</a></small> '
         +'<b>'+v.t+'</b> <i>(<small>'+v.n+'</small>)</i></li>'
       ); 
     });
