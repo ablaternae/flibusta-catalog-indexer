@@ -33,10 +33,20 @@ catalog (surname varchar(255), name varchar(255), patronymic varchar(255),
 * [x] проиндексировать содержимое
 * [x] написать реализацию
 * [x] прикрутить веб-интерфейс
-* [ ] статистика поиска, посещения страниц
+* [x] статистика поиска, посещения страниц
 * [ ] тг-бот
 
 ## немного статистики
+* ![Visitor count](https://shields-io-visitor-counter.herokuapp.com/badge?page=ablaternae.flibusta-catalog-indexer)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fablaternae.github.io%2Fflibusta-catalog-indexer%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=counter&edge_flat=true)](https://hits.seeyoufarm.com)
+[![Hits](https://hits.sh/ablaternae.github.io/flibusta-catalog-indexer.svg?view=today-total&style=flat-square&label=hits.sh)](https://hits.sh/ablaternae.github.io/flibusta-catalog-indexer/)
+![GitHub](https://img.shields.io/github/license/ablaternae/flibusta-catalog-indexer?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/ablaternae/flibusta-catalog-indexer?style=flat-square)
+![GitHub repo directory count (custom path)](https://img.shields.io/github/directory-file-count/ablaternae/flibusta-catalog-indexer/docs/i?label=index%20dirs&style=flat-square&type=dir)
+![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/ablaternae/flibusta-catalog-indexer/data/catalog.txt?label=origin%20data%20size&style=flat-square)
+![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/ablaternae/flibusta-catalog-indexer/data/catalog.csv?label=target%20csv&style=flat-square)
+![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/ablaternae/flibusta-catalog-indexer/data/catalog.sql.gz?label=sql.gz&style=flat-square)
+
 * общее количество записей в первоначальном архиве более 600 000 и увеличивается
 * размер исходных данных в текстовом виде более 70Мб
 * SQL дамп 100Мб
@@ -55,4 +65,4 @@ catalog (surname varchar(255), name varchar(255), patronymic varchar(255),
 * [superkube](//github.com/imperavi/superkube)
 * [ЧудоТекст](//github.com/Alexey-T/CudaText)
 
-всем спасибо, проект завершён. если хотите на своем маленьком сайте быстрый поиск, свяжитесь со мной.
+всем спасибо, проект завершён. если хотите на своем маленьком сайте быстрый поиск, свяжитесь со мной
